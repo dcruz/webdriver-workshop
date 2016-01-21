@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>reveal.js – The HTML Presentation Framework</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/custom-solarized.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>Selenium/WebDriver</h1>
+					<h3>Introdução &mdash; O que é; comandos frequentes; selectores</h3>
+					<p>
+						<small>Criado por <a href="mailto:david@vcruz.net">David Cruz</a> / <a href="http://twitter.com/hakimel">@davidjvcruz</a></small>
+					</p>
+				</section>
+
+				<section>
+                    <h2>O que é Selenium/WebDriver?</h2>
+					<p>
+                        <ul>
+                            <li>Ferramenta de testes automatizados</li>
+                            <li>Pretende testar sites e aplicações Web</li>
+                            <li>Implementações em diversas linguagens (Java, Javascript, PHP, Python, Ruby, ...)
+					</p>
+				</section>
+                
+                <section>
+                    <h2>O que permite fazer?</h2>
+					<p>
+                        <ul>
+                            <li>Interagir com uma página/aplicação como se fosse um utilizador</li>
+                            <li>Testar aplicações dinâmicas (AJAX, Angular, React, ...)</li>
+                            <li>Validações <i>cross-browser</i>
+                            <li>Automatizar tarefas manuais aborrecidas(<i>screen scraping</i>, screenshots, ...)
+					</p>
+				</section>
+
+
+                <section data-markdown>
+                    ## Há diferença entre Selenium e Webdriver?
+
+                    - Nasceram como projectos independentes
+                    - Em 2009, os projectos juntaram-se
+                    - Selenium: injecta código JavaScript na página automatizar e correr testes
+                    - Selenium: define um protocolo para comunicação de acções remotamente
+                    - Webdriver: usa chamadas nativas do browser para automatizar e correr testes
+                </section>
+
+                <section data-markdown>
+                    ## Vantagens e desvantagens
+
+                    ### Selenium
+                    - Mais fácil de dar suporte a uma nova combinação browser/OS.
+                    - Requer um servidor(local ou remoto) para correr
+                    - API bastante amadurecido e completo
+                    - Lida com testes distribuídos e em múltiplos browsers
+
+                    ### WebDriver
+                    - Funcionamento mais rápido e menos propenso a erros
+                    - Não necessita de servidor(Selenium RC) para correr
+                    - Usado como base para uma norma W3C
+                </section>
+
+                <section data-markdown>
+                    ## Selenium ou Webdriver?
+
+                    - Actualmente há pouca diferença
+                    - É possível escrever os testes com a API de WebDriver e corrê-los na infrastrutura distribuída de Selenium
+                    - **NOTA:** Não irá ser detalhada a parte de infrastrutura e testes distribuídos. Somente testes locais.
+                </section>
+
+                <section data-markdown>
+                    ## Plano
+
+                    1. Selenium IDE
+                    1. "O meu primeiro teste"
+                    1. Interagir com a página
+                    1. Navegar na página
+                    1. Submeter informação
+                    1. Selectores
+                    1. Exercícios
+                </section>
+
+                <section data-background="#073642">
+                    <h2>Selenium IDE</h2>
+                </section>
+
+                <section>
+                    <h2>Selenium IDE: o que é?</h2>
+                    <ul>
+                        <li>Ferramenta gráfica que auxilia na criação dos testes
+                        <li>Observa a interacção com páginas e grava como passos de um teste
+                        <li>Funciona como editor: lista os métodos disponíveis e o que fazem
+                        <li>Permite exportar a definição dos testes em código programático
+                    </ul>
+                </section>
+
+                <section data-markdown>
+                    ## Selenium IDE: limitações
+
+                    - Somente para Firefox
+                    - Torna-se difícil de gerir à medida que o número de testes aumenta
+                    - Exclusivo para uso local/pessoal
+                    - Selectores não têm um comportamento consistente
+                </section>
+
+                <section>
+                    <h2>Demo time!</h2>
+                    <img data-src="img/selenium-ide.gif">
+                </section>
+
+                <section data-background="#073642">
+                    <h2>Selenium/Webdriver como deve ser</h2>
+                </section>
+
+                <section data-markdown>
+                    ## Selenium/Webdriver
+
+                    Criar os testes programaticamente permite-nos:
+                    - Evitar "magias"
+                    - Maior controlo (em particular nos selectores de elementos)
+                    - Evitar repetições
+                    - Testes mais completos (iterar elementos, screenshots, ...)
+                </section>
+
+                <section>
+                    <h2>"O meu primeiro teste"</h2>
+
+                    <p>O que é preciso para correr um teste?</p>
+                    <ol>
+                        <li class="fragment">Abrir o browser</li>
+                        <li class="fragment">Correr testes</li>
+                        <li class="fragment">Fechar o browser</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h2>"O meu primeiro teste"</h2>
+                    <pre><code class="python" data-trim data-noescape>
+from selenium import webdriver
+
+# Escolha do conector de Webdriver
+driver = webdriver.Firefox()
+
+# Opening a page
+driver.get('http://www.sapo.pt/');
+
+# Testar se o título é "SAPO"
+# Lança um erro se não fôr
+assert "SAPO" == driver.title
+
+# Fecha a conexão com o browser
+driver.close()  
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Abrir o browser</h2>
+                    <pre><code class="python" data-trim data-noescape>
+from selenium import webdriver
+
+# Escolha do conector de Webdriver
+driver = webdriver.Firefox()
+                    </code></pre>
+                    <h2>Fechar o browser</h2>
+                    <pre><code class="python" data-trim data-noescape>
+# Fecha a janela do browser
+driver.close()
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Outros drivers</h2>
+                    <ul>
+                        <li>
+                        Google Chrome - <code>webdriver.Chrome()</code><br />
+                        (requer instalar driver)
+                        </li>
+                        <li>
+                        Internet Explorer - <code>webdriver.Ie()</code><br />
+                        (requer instalar driver)
+                        </li>
+                        <li>
+                        Opera - <code>webdriver.Opera()</code><br />
+                        (requer instalar driver)
+                        </li>
+                        <li>
+                        Phantom.js - <code>webdriver.PhantomJS()</code><br />
+                        (requer instalar Phantom.JS)
+                        </li>
+                    </ul>
+                    
+                </section>
+
+                <section>
+                    <h2><i>Remote driver</i></h2>
+                    <p>Usado para conectar a servidores de Selenium e <i>drivers</i> não suportados pela linguagem (e.g., Android, iOS, Safari)</p>
+                    <pre><code class="python" data-trim data-noescape>
+from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+
+driver = webdriver.Remote(
+    command_executor='http://127.0.0.1:4444/wd/hub',
+    desired_capabilities=DesiredCapabilities.SAFARI)
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Abrir uma página</h2>
+                    <pre><code class="python" data-trim data-noescape>
+# Opening a page
+driver.get('http://www.sapo.pt/');
+                    </code></pre>
+                    <p class="fragment"><span class="warning">Atenção:</span> Ao navegar para outra página, o Webdriver perde qualquer informação acerca da página actual</p>
+                </section>
+
+                <section>
+                    <h2>Validar o título</h2>
+                    <pre><code class="python" data-trim data-noescape>
+# Testar se o título é "SAPO"
+# Lança um erro se não fôr
+assert "SAPO" == driver.title
+                    </code></pre>
+                    <ul>
+                        <li><code>driver.title</code>: O título da página actual
+                        <li><code>assert</code>: Testa se a condição passa. Nativo de Python
+                    </ul>
+                </section>
+                
+                <section>
+                    <h2>"O meu primeiro teste"</h2>
+                    <pre><code class="python" data-trim data-noescape>
+from selenium import webdriver
+
+# Escolha do conector de Webdriver
+driver = webdriver.Firefox()
+
+# Opening a page
+driver.get('http://www.sapo.pt/');
+
+# Testar se o título é "SAPO"
+# Lança um erro se não fôr
+assert "SAPO" == driver.title
+
+# Fecha a conexão com o browser
+driver.close()  
+                    </code></pre>
+                </section>
+
+                <section data-background="#073642">
+                    <h2>Selectores</h2>
+                </section>
+
+                <section>
+                    <h2>Selectores</h2>
+                    <p>Por selectores entende-se: <em>forma de localizar e aceder a elementos da página</em>.
+                    <p>São a principal ciência/arte na criação dos testes.
+                </section>
+
+                <section>
+                    <h2>Tipos de selectores (1/3)</h2>
+                    <p>Várias estratégias para localizar elementos nas páginas:</p>
+                    <dl>
+                        <dt>ID</dt>
+                        <dd>Identificador de um elemento HTML/XML/SVG</dd>
+                        <dt>Class name</dt>
+                        <dd>Usa o atributo "class" para localizar elementos</dd>
+                        <dt>Tag name</dt>
+                        <dd>Procura pelo nome de um elemento</dd>
+                        <dt>name</dt>
+                        <dd><em>name</em> de um elemento de um formulário</dd>
+                    </dl>
+                </section>
+
+                <section>
+                    <h2>Tipos de selectores (2/3)</h2>
+                    <p>Várias estratégias para localizar elementos nas páginas:</p>
+                    <dl>
+                        <dt>CSS selector</dt>
+                        <dd>Usa selectores CSS para localizar elementos</dd>
+                        <dt>XPath</dt>
+                        <dd><em>XML Path Language</em> sintaxe compacta para localizar elementos em documentos tipo XML</dd>
+                    </dl>
+                </section>
+
+                <section>
+                    <h2>Tipo de selectores (3/3)</h2>
+                    <p>Existem outros, mas recomendo evitar por serem inconsistentes (nem sempre funcionam).</p>
+                    <p>Evitar: "<em>by link text</em>", "<em>by partial link text</em>"</p>
+                </section>
+
+                <section>
+                    <h2>Selector <em>ID</em></h2>
+                    <pre><code class="HTML" data-lang="HTML">
+<nav id="main-menu">
+    <ul>
+        <li><a class="active" href="/">Home</a></li>
+        <li><a href="/about">About</a></li>
+    </ul>
+</nav>
+                    </code></pre>
+                    <p>Para obter o <em>ID</em>:</p>
+                    <pre><code data-lang="python">
+driver.find_element_by_id('main-menu')
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Selector <em>Class name</em></h2>
+                    <pre><code class="HTML" data-lang="HTML">
+<nav id="main-menu">
+    <ul>
+        <li><a class="active" href="/">Home</a></li>
+        <li><a href="/about">About</a></li>
+    </ul>
+</nav>
+                    </code></pre>
+                    <p>Para obter o elemento <em>active</em>:</p>
+                    <pre><code data-lang="python">
+driver.find_element_by_class_name('active')
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Selector <em>Tag name</em></h2>
+                    <pre><code class="HTML" data-lang="HTML">
+<nav id="main-menu">
+    <ul>
+        <li><a class="active" href="/">Home</a></li>
+        <li><a href="/about">About</a></li>
+    </ul>
+</nav>
+                    </code></pre>
+                    <p>Para obter todos os 'links'(<em>&lt;a&gt;)</em>:</p>
+                    <pre><code data-lang="python">
+driver.find_elements_by_tag_name('a')
+                    </code></pre>
+                    <p>Atenção para o <mark>s</mark> em <kbd>find_element<b>s</b>_by_tag_name</kbd></p>
+                </section>
+
+                <section>
+                    <h2 style="font-size: 1.2em"><kbd>find_element_*</kbd> <i>versus</i> <kbd>find_element<b>s</b>_*</kbd></h2>
+                    <ul>
+                        <li>O primeiro só devolve um elemento</li>
+                        <li>O segundo devolve todos os que encontrar que coincidam com a regra do selector</li>
+                        <li>Selector por <em>ID</em> só tem selector <kbd>find_element_by_id</kdb><br /> (não é suposto existir múltiplos <em>ID</em>s)</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Selector <em>Name</em></h2>
+                    <pre><code class="HTML" data-lang="HTML">
+<nav id="main-menu">
+    <ul>
+        <li><a class="active" href="/">Home</a></li>
+        <li><a href="/about">About</a></li>
+    </ul>
+    <form action="/search/" method="get" role="search">
+        <input type="search" name="q">
+        <button type="submit">Pesquisar</button>
+    </form>
+</nav>
+                    </code></pre>
+                    <p>Para obter a caixa de pesquisa</em>:</p>
+                    <pre><code data-lang="python">
+driver.find_element_by_name('q')
+                    </code></pre>
+                </section>
+
+                 <section>
+                    <h2>Selector <em>XPath</em></h2>
+                    <ul>
+                        <li>Vem do mundo XML mas pode ser aplicado a documentos HTML e SVG</li>
+                        <li>Fornece uma sintaxe condensada para localizar elementos</li>
+                        <li>Bom para atravessar a estrutura do documento</li>
+                        <li>Mas hoje em dia, a norma CSS3 permite fazer tudo o que XPath faz</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Selector <em>XPath</em></h2>
+                    <p>Obter o primeiro <kbd>&lt;nav&gt;</kbd></em>:</p>
+                    <pre><code data-lang="python">
+# Localiza de forma absoluta
+driver.find_element_by_xpath_selector('/html/body/header/nav')
+
+# Localiza de forma relativa
+driver.find_element_by_xpath_selector('//nav')
+                    </code></pre>
+                    <p>Obter primeiro formulário de pesquisa</em>:</p>
+                    <pre><code data-lang="python">
+driver.find_elements_by_css_selector('[role="search"]')
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Selector <em>XPath</em></h2>
+                    <p>Localizar pelo ID:</p>
+                    <pre><code data-lang="python">
+driver.find_element_by_xpath_selector('//[@id="main-menu]')
+                    </code></pre>
+                    <p>Seleccionar o link com o texto "About"</em>:</p>
+                    <pre><code data-lang="python">
+driver.find_elements_by_xpath_selector('//a/[text()="About"]')
+                    </code></pre>
+                </section>
+
+                 <section>
+                    <h2>Enganos comuns e principais erros: XPath</h2>
+                    <ul>
+                        <li><code>//nav/a[1]</code> devolve o primeiro link (armadilha para <em>devs</em>)</li>
+                        <li>Procurar por texto num elemento ou atributo implica que tenha que ser exactamente igual.<br/>
+                        <code>//a[@class="active"]</code> não funciona para: <br/>
+                        <code>&lt;a href="#" class="active item"&gt;</code></li>
+                        <li>Para 'match' parcial, usar:<br/><code>//a[contains(@class, 'active')]</code></li>
+                    </ul>
+                </section>
+
+              <section>
+                    <h2>Selector <em>CSS</em></h2>
+                    <pre><code class="HTML" data-lang="HTML">
+<nav id="main-menu">
+    <ul>
+        <li><a class="active" href="/">Home</a></li>
+        <li><a href="/about">About</a></li>
+    </ul>
+    <form action="/search/" method="get" role="search">
+        <input type="search" name="q">
+        <button type="submit">Pesquisar</button>
+    </form>
+</nav>
+                    </code></pre>
+                    <p>Obter todos os links do menu</em>:</p>
+                    <pre><code data-lang="python">
+driver.find_elements_by_css_selector('#main-menu a')
+                    </code></pre>
+                    <p>Obter primeiro formulário de pesquisa</em>:</p>
+                    <pre><code data-lang="python">
+driver.find_elements_by_css_selector('[role="search"]')
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Selector <em>CSS</em></h2>
+                    <p>Seleccionar o element descendente</p>
+                    <pre><code class="python" data-lang="python">
+driver.find_element_by_css('#main-menu > ul > li')
+                    </code></pre>
+                    <p>Seleccionar o item adjacente</p>
+                    <pre><code class="python" data-lang="python">
+driver.find_element_by_css('#main-menu li + li')
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Selector <em>CSS</em></h2>
+                    <p>Seleccionar todas as caixas de pesquisa</p>
+                    <p>Só selecciona se o atributo fôr <em>exactamente</em> "search"</p>
+                    <pre><code class="python" data-lang="python">
+driver.find_elements_by_css('[type="search"]')
+                    </code></pre>
+                    <p>Seleccionar se o atributo contem o termo "active"</p>
+                    <pre><code class="python" data-lang="python">
+driver.find_element_by_css('[class~="active"]')
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Selector <em>CSS</em></h2>
+                    <p>Todas as links começados por "mailto:"</p>
+                    <pre><code class="python" data-lang="python">
+driver.find_elements_by_css('a[href^="mailto:"]')
+                    </code></pre>
+                    <p>Todos os links com domínio .PT</p>
+                    <pre><code class="python" data-lang="python">
+driver.find_elements_by_css('a[href$=".pt"]')
+                    </code></pre>
+                </section>
+                <section>
+                    <h2>Selector <em>CSS</em></h2>
+                    <p>Seleccionar o último link do menu</p>
+                    <pre><code class="python" data-lang="python">
+driver.find_elements_by_css('#main-menu li:last-of-type a"')
+                    </code></pre>
+                    <p>Seleccionar o segundo link do menu</p>
+                    <pre><code class="python" data-lang="python">
+driver.find_element_by_css('#main-menu li:nth-of-type(2) a')
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Enganos comuns e principais erros</h2>
+                    <p>detalhar os principais problemas com selectores</p>
+                    <ul>
+                        <li>TODO: elemento não está visível ao utilizador (display: hidden?; display: none?)</li>
+                </section>
+
+                <section>
+                    <h2>Comandos essenciais</h2>
+                    <ul>
+                        <li>Navegar para página: <code>driver.get('http://sapo.pt/')</code>
+                        <li>obter título da página: <code>driver.title</code>
+                        <li>localizar um elemento: <code>driver.find_element_by_*</code>
+                        <li>localizar todos os elementos: <code>driver.find_elements_by_*</code>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Comandos essenciais</h2>
+                    <ul>
+                        <li>Obter texto de um elemento: <code>elem.text</code>
+                        <li>Texto do atributo de um elemento: <code>elem.get_attribute('class')</code>
+                        <li>Clicar num elemento: <code>elem.click()</code>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Comandos de navegação</h2>
+                    <ul>
+                        <li><code>driver.back()</code>
+                        <li><code>driver.forward()</code>
+                    </ul>
+                </section>
+
+                <section data-background="#073642">
+                    <h2>Manipular formulários</h2>
+                </section>
+
+                <section>
+                    <h2>Interagir com caixas de texto</h2>
+                    <ul>
+                        <li><code>elem.send_keys('João Silva')</code><br/>Preenche o campo de texto
+                        <li><code>elem.clear()</code><br/>Limpa o campo de texto
+                    </ul>
+                    <p><b>Atenção:</b> Seleccionar ou escrever num campo de texto não limpa o que lá está.</p>
+                </section>
+
+                <section>
+                <h2>Interagir com <kbd>&lt;select&gt;</kbd></h2>
+                <p>Com os comandos que já conhecemos podemos interagir, mas há uma opção mais conveniente</p>
+                <pre><code class="python" data-lang="python">
+# 'import' necessário
+from selenium.webdriver.support.ui import Select
+
+# Cria um objecto especial 'select'
+localidades = Select(driver.find_element_by_name('localidades'))
+
+# Este tem métodos de conveniência
+localidades.select_by_index(3)
+localidades.select_by_visible_text('Castelo Branco')
+localidades.select_by_value('castelo-branco')
+
+# Deseleccionar tudo
+localidades.deselect_all()
+                </code></pre>
+                </section>
+
+                <section>
+                    <h2>Submeter formulários</h2>
+                    <ul>
+                        <li>Existe uma forma conveniente de submeter formulários se o elemento estiver dentro de um <kbd>&lt;form/&gt;
+                        <li><code>elem.submit()</code> envia os dados
+                        <li>Caso não seja um formulário convencional pode-se sempre localizar o botão de submissão e clicar nele.
+                    </ul>
+                </section>
+
+                <section data-background="#073642">
+                    <h2>Wait for elements</h2>
+                </section>
+
+                <section>
+                    <h2>Wait for elements</h2>
+                    <ul>
+                        <li>Não sempre os elementos que estamos a testar aparecem imediatamente.</li>
+                        <li>Casos como: carregamento lento, "<i>lazy loading</i>", carregamento assíncrono, etc.</li>
+                        <li>Soluções como <code>time.sleep(5)</code> funcionam mas se o elemento aparece após 2s, porquê esperar 5s?</li>
+                        <li>Há soluções optimizadas para esperar somente o tempo necessário.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2><i>Implicit waits</i></h2>
+                    <p>Todas as operações que são feitas esperam X segundos até que o elemento apareça ou que o tempo de espera seja ultrapassado.</p>
+                    <pre><code data-lang="python">
+from selenium import webdriver
+
+driver = webdriver.Firefox()
+driver.implicitly_wait(10) # wait at most 10 seconds
+driver.get("http://sapo.pt/")
+ad_takeover = driver.find_element_by_id("ad-takeover")
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2><i>Explicit waits</i></h2>
+                    <p>Permite definir o tempo que queremos esperar para que uma condição seja satisfeita antes de prosseguir.</p>
+                    <pre><code data-lang="python">
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+driver = webdriver.Firefox()
+driver.get("http://somedomain/url_that_delays_loading")
+try:
+    element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "myDynamicElement"))
+                )
+    finally:
+        driver.quit()
+                    </code></pre>
+                </section>
+                
+                <section>
+                    <h2><i>Explicit waits</i></h2>
+                    <p>Vários condições de espera estão disponíveis(e.g.):</p>
+                    <ul>
+                        <li><kbd>title_is</kbd></li>
+                        <li><kbd>alert_is_present</kbd></li>
+                        <li><kbd>text_to_be_present_in_element</kbd></li>
+                        <li><a href="http://selenium.googlecode.com/svn/trunk/docs/api/py/webdriver_support/selenium.webdriver.support.expected_conditions.html">lista das condições disponíveis</a></li>
+                    </ul>
+                </section>
+ 
+                <section>
+                    <h2>Referências úteis</h2>
+                    <ul>
+                        <li><a href="https://github.com/seleniumhq/selenium">Projecto Selenium Webdriver</a>
+                        <li><a href="http://selenium-python.readthedocs.org/index.html">Documentação Selenium Python</a>
+                        <li><a href="https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Getting_started/Selectors">Selectores CSS</a>
+                        <li><a href="http://code.tutsplus.com/tutorials/the-30-css-selectors-you-must-memorize--net-16048">The 30 CSS Selectors you Must Memorize</a>
+                        <li><a href="https://wiki.saucelabs.com/display/DOCS/Getting+Started+with+Selenium#GettingStartedwithSelenium-ExplicitWaits">Getting Started with Selenium</a>
+                    </ul>
+                </section>
+
+            </div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
