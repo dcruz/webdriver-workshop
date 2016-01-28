@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Selenium/Webdriver — Behavior-driven development</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/custom-solarized.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>Selenium/WebDriver</h1>
+					<h3>Behavior-driven development(BDD)</h3>
+					<p>
+						<small>Criado por <a href="mailto:david@vcruz.net">David Cruz</a> / <a href="http://twitter.com/hakimel">@davidjvcruz</a></small>
+					</p>
+				</section>
+
+				<section>
+                    <h2>Behavior-driven development</h2>
+                        <ul>
+                            <li>É uma técnica de desenvolvimento <em>agile</em> que pretende permitir a colaboração entre todos os envolvidos no processo.
+                            <li>Os testes são escritos usando língua natural para facilitar o seu entendimento
+                            <li>Podemos dividir as responsabilidades de definição e implementação dos testes
+                            <li>Podem ser facilmente mapeados <em>Epics</em> e <em>User stories</em> nos testes
+                            <li>Incentiva os testes a focarem-se na funcionalidade fornecida
+                        </ul>
+				</section>
+
+                <section>
+                    <h2>Behavior-driven development</h2>
+                        <ul>
+                            <li>Termos como '<em>should</em>', quando se descreve o comportamento do software, ajuda a clarifica a responsabilidade e fomenta a discussão da funcionalidade
+                            <li>Termos como '<em>ensure'</em> descreve a responsabilidade do sistema em validar o desfecho da situação efectuada
+                            <li>Podem ser facilmente mapeados <em>Epics</em> e <em>User stories</em> nos testes
+                            <li>mais acerca de <a href="https://en.wikipedia.org/wiki/Behavior-driven_development">Behavior-driven development</a>(BDD)
+                        </ul>
+                </section>
+
+                <section>
+                    <h2>Linguagem "Gherkin"</h2>
+                        <ul>
+                            <li>É uma linguagem especificamente concebida para a definição de cenários de testes em ambientes BDD
+                            <li>A ferramenta <a href="">Cucumber</a>(Ruby) popularizou <em>Gherkin</em> mas existem ferramentas equivalentes para a maioria das linguagens
+                            <li>Para Python, vamos usar a ferramenta <a href="http://pythonhosted.org/behave/">Behave</a>
+                        </ul>
+                         <pre><code class="gherkin" data-trim data-noescape>
+Scenario: Refunded items should be returned to stock
+  Given a customer previously bought a black sweater from me
+    And I currently have three black sweaters left in stock.
+   When he returns the sweater for a refund
+   Then I should have four black sweaters in stock.
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Given/When/Then</h2>
+                        <dl>
+                            <dt>Given</dt>
+                            <dd>o "passado". Estado do sistema antes do utilizador ter começado a interagir com ele.<br/>
+                            Evitar falar das interacções dos utilizadores nesta fase.</dd>
+                            <dt>When</dt>
+                            <dd>o "presente". Onde ocorrem as acções por parte do utilizador, que poderão levar a mudanças no sistema.</dd>
+                            <dt>Then</dt>
+                            <dd>o "futuro". Validamos o desfecho das interacções.</dd>
+                        </dl>
+                </section>
+
+                <section>
+                    <h2>Given: Do & don't</h2>
+                        <p> Válidos como "Given"</p>
+                        <ul>
+                            <li>Given I logged in as "Calvin"</li>
+                            <li>Given I am on the ACME homepage</li>
+                            <li>Given "Hobbes" as the persona</li>
+                        </ul>
+                        <p>Não usar nos passos "Given"</p>
+                        <ul>
+                            <li>Given I click the login button</li>
+                        </ul>
+                </section>
+
+                <section>
+                    <h2>Testes <abbr title="Behavior-driven development">BDD</abbr> com BDD</h2>
+                        <ul>
+                            <li>Vamos criar testes BDD recorrendo à ferramenta <em><a href="http://pythonhosted.org/behave/">Behave</a></em>
+                            <li><em>Behave</em> trabalha com dois tipos de ficheiros: "features" e "steps"
+                            <li><em>Feature files</em>: ficheiros com os testes escritos em língua natural(Gherkin)
+                            <li><em>Step files</em>: código Python que traduz o texto em acções
+                        </ul>
+                </section>
+
+                <section>
+                    <h2>Criar testes automatizados com <em>Behave</em></h2>
+                        <ul>
+                        </ul>
+                        <p>A estrutura de directoria deverá ser algo como:</p>
+                         <pre><code class="" data-trim data-noescape>
+acme-store/
+acme-store/signup.feature
+acme-store/login.feature
+acme-store/environment.py
+acme-store/steps/
+acme-store/steps/website.py
+acme-store/steps/utils.py
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Feature files</h2>
+                         <pre><code class="gherkin" data-trim data-noescape>
+Feature: feature name
+  description
+  further description
+
+  Background: some requirement of this test
+    Given some setup condition
+      And some other setup action
+
+  Scenario: some scenario
+      Given some condition
+       When some action is taken
+       Then some result is expected.
+
+  Scenario: some other scenario
+      Given some other condition
+       When some action is taken
+       Then some other result is expected.
+
+  Scenario: ...
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Múltiplas condições</h2>
+                         <pre><code class="gherkin" data-trim data-noescape>
+Scenario: Multiple Givens
+  Given one thing
+  Given an other thing
+  Given yet an other thing
+   When I open my eyes
+   Then I see something
+   Then I don't see something else
+                    </code></pre>
+                    <p>É equivalente a:</p>
+                    <pre><code class="gherkin" data-trim data-noescape>
+Scenario: Multiple Givens
+  Given one thing
+    And an other thing
+    And yet an other thing
+   When I open my eyes
+   Then I see something
+    But I don't see something else
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Primeiro exemplo</h2>
+                    <pre><code class="gherkin" data-lang="example.feature" data-trim data-noescape>
+Scenario: Search query result is the same
+   Given I open SAPO homepage
+    When I search for "Portugal"
+    Then SERP query is "Portugal"
+                    </code></pre>
+                    <pre><code class="python" data-lang="steps/example.py" data-trim data-noescape>
+from behave import *
+
+@given('I open SAPO homepage')
+def step_impl(context):
+    context.browser.get("http://sapo.pt/")
+
+@when('I search for "{query}"')
+def step_impl(context, query):
+    form = context.browser.find_element_by_tag_name('form')
+    form.find_element_by_name('q').send_keys(query)
+    form.submit()
+
+@then('SERP query "{result_query}" is the same')
+    def step_impl(context, result_query):
+    form = context.browser.find_element_by_name('q')
+    assert form.get_attribute('value') == result_query
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Environment</h2>
+                    <p>Ficheiro na qual podemos definir variáveis de ambiente e definir, similarmente a <em>unittest</em>, operações antes e depois de testes.</p>
+                         <pre><code class="python" data-lang="environment.py" data-trim data-noescape>
+from selenium import webdriver
+
+def before_all(context):
+    setup_debug_on_error(context.config.userdata)
+    context.browser = webdriver.Firefox()
+
+def after_all(context):
+    context.browser.quit()
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Environment</h2>
+                        <p>Definição dos vários eventos/passos na execução dos testes</p>
+                         <pre><code class="python" data-trim data-noescape>
+before_all
+for feature in all_features:
+    before_feature
+    for scenario in feature.scenarios:
+        before_scenario
+        for step in scenario.steps:
+            before_step
+                step.run()
+            after_step
+        after_scenario
+    after_feature
+after_all
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Primeiro exemplo</h2>
+                    <p>Correr o teste</p>
+                    <pre><code class="bash">
+$ behave sapo-search.feature
+                    </code></pre>
+                    <p>Resultados</p>
+                    <pre><code class="gherkin" data-trim data-noescape>
+Feature: Testing SAPO search consistency # sapo-search.feature:1
+
+  Scenario Outline: Search query is the same on result page # sapo-search.feature:10
+    Given I open SAPO homepage                              # steps/sapo-search.py:4 2.653s
+     When I search for "Portugal"                           # steps/sapo-search.py:8 1.906s
+     Then SERP query "Portugal" is the same                 # steps/sapo-search.py:25 0.027s
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Scenario Outline</h2>
+                    <p>"<em>Scenario Outline</em>" é uma forma de testar múltiplos dados sem ter que repetir a escrita de cenários.</p>
+                         <pre><code class="gherkin" data-trim data-noescape>
+Scenario Outline: Blenders
+   Given I put &lt;thing&gt; in a blender,
+    When I switch the blender on
+    Then it should transform into &lt;other thing&gt;
+
+ Examples: Consumer Electronics
+   | thing         | other thing |
+   | iPhone        | toxic waste |
+   | Galaxy Nexus  | toxic waste |
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Dados de testes — texto</h2>
+                    <p>É possível definir dados a serem usados pelos testes. No caso de texto, os dados estão disponíveis na variável de contexto <code>context.text</code></p>
+                    <p>Útil para passar dados como: blocos de texto, XML, JSON, etc.</p>
+                         <pre><code class="gherkin" data-lang=".feature" data-trim data-noescape>
+Scenario: Universe
+   Given The sound of the Universe
+        """Ommmmmmmmmmmmmmmm"""
+    When I meditate
+    Then my legs should hurt less
+                    </code></pre>
+                <pre><code class="python" data-lang="python" data-trim data-noescape>
+@given('The sound of the Universe')
+def step_impl(context):
+    sound = context.text
+    ...
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Dados de testes - tabela de dados</h2>
+                    <p>Para se usarem dados com uma lógica tabular, estes ficam disponíveis na veriável de contexto <code>context.table</code></p>
+                         <pre><code class="gherkin" data-lang=".feature" data-trim data-noescape>
+Scenario: some scenario
+  Given a set of specific users
+     | name      | department  |
+     | Barry     | Beer Cans   |
+     | Pudey     | Silly Walks |
+     | Two-Lumps | Silly Walks |
+
+ When we count the number of people in each department
+ Then we will find two people in "Silly Walks"
+  But we will find one person in "Beer Cans"
+                    </code></pre>
+                <pre><code class="python" data-lang="python" data-trim data-noescape>
+@given('a set of specific users')
+def step_impl(context):
+    for row in context.table:
+        model.add_user(name=row['name'], department=row['department'])
+                    </code></pre>
+                <p><strong>Atenção:</strong> as tabelas de dados são diferentes das tabelas de "Scenario Outline"</p>
+                </section>
+
+                <section>
+                    <h2>Passar dados entre "steps"</h2>
+                    <pre><code class="gherkin" data-lang="example.feature" data-trim data-noescape>
+Scenario: Search query result is the same
+   Given I open SAPO homepage
+    When I search for "Portugal"
+    Then SERP query is the same
+                    </code></pre>
+                    <pre><code class="python" data-lang="steps/example.py" data-trim data-noescape>
+…
+
+@when('I search for "{query}"')
+def step_impl(context, query):
+    # Guardar na variável de contexto
+    context.query = query
+    form = context.browser.find_element_by_tag_name('form')
+    form.find_element_by_name('q').send_keys(query)
+    form.submit()
+
+@then('SERP query is the same')
+    def step_impl(context, result_query):
+    form = context.browser.find_element_by_name('q')
+    # 'query' pode ser usada noutra função
+    assert form.get_attribute('value') == context.query
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Outras coisas possíveis</h2>
+                    <ul>
+                        <li>Selecção de steps com expressões regulares
+                        <li>Interligação com 'mocks'
+                        <li>Formatos de output alternativos
+                        <li>Suporte para outros idiomas do termos de teste (e.g, 'Given' -> 'Dado', 'Then' -> 'Então', ...)
+                        <li>ver mais na <a href="http://pythonhosted.org/behave/index.html">documentação de Behave</a>
+                    </ul>
+                </section>
+
+                <section style="text-align: left">
+                    <h2>Exercícios</h2>
+                    <p><b>Queremos testar o carrinho de compras do site "A Book Apart"(<a href="http://abookapart.com/">http://abookapart.com/</a>).</b></p>
+                    <p><b>Vamos especificar os testes para os seguintes casos:</b></p>
+                    <ul>
+                        <li>Adicionar o livro "<em>Just enough research</em>" ao carrinho de compras
+                        <li>Adicionar dois ebooks "Going responsive" e garantir que se tem direito ao desconto
+                        <li>Adicionar três livros em papel e um ebook de "<em>Going responsive</em>" e verificar que se tem os 20% de desconto
+                        <li>Adicionar quatro ebook e remover dois, garantindo que se tem 15% de desconto
+                    </ul>
+                </section>
+
+            </div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>

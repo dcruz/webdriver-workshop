@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Receitas de Selenium/Webdriver</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/custom-solarized.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>Receitas de Selenium/WebDriver</h1>
+					<h3>cookies; frames; swipe; ...</h3>
+					<p>
+						<small>Criado por <a href="mailto:david@vcruz.net">David Cruz</a> / <a href="http://twitter.com/hakimel">@davidjvcruz</a></small>
+					</p>
+				</section>
+
+				<section>
+                    <h2>Porquê receitas?</h2>
+                    <ul>
+                        <li>Algumas interacções nas páginas são mais complexas e precisam de comandos avançados ou pequenos truques</li>
+                        <li>Forma de poupar tempo</li>
+                    </ul>
+				</section>
+                
+                <section>
+                    <h2>Cookies</h2>
+                    <p>Problema:</p>
+                    <ul>
+                        <li>Selenium/Webdriver arranca com um sessão limpa de estado(sem cookies ou extensões)</li>
+                        <li><i>Cookies</i> podem ser essenciais ou acelerarem um teste</li>
+                    </ul>
+				</section>
+
+                <section>
+                    <h2>Cookies - receita</h2>
+                    <p>É preciso navegar para uma página que não exista antes de injectar o <i>cookie</i> que queremos e navegar para a página de teste.</i>
+                    <pre><code class="python" data-trim data-noescape>
+# navegar para uma página inexistente
+# (minimiza o risco de serem enviados cookies antes de tempo)
+driver.get('http://lifestyle.sapo.pt/404');
+
+# cookie a injectar
+new_cookie = {'name' : '_ckiemsg', 'value' : '1', 'path' : '/'}
+driver.add_cookie(new_cookie)
+
+# navegar para a página de teste
+driver.get('http://lifestyle.sapo.pt/')
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Alerts</h2>
+                    <p>Problema:</p>
+                    <ul>
+                        <li>Janelas de alerta não fazem parte do documento HTML da página</li>
+                        <li><i>Cookies</i> podem ser essenciais ou acelerarem um teste</li>
+                    </ul>
+				</section>
+
+                 <section>
+                    <h2>Cookies - receita</h2>
+                    <p>É preciso navegar para uma página que não exista antes de injectar o <i>cookie</i> que queremos e navegar para a página de teste.</i>
+                    <pre><code class="python" data-trim data-noescape>
+# Importar classe auxiliar para alertas
+from selenium.webdriver.common.alert import Alert
+
+# Escrever e aceitar no alerta
+name_prompt = Alert(driver)
+name_prompt.send_keys(“Willian Shakesphere”)
+name_prompt.accept() # também disponível: .dismiss()
+
+# Para alertas de autenticação
+auth_prompt = Alert(driver)
+auth.authenticate('manel', 'benfica123')
+                    </code></pre>
+                    <p>saber mais: <a href="http://selenium-python.readthedocs.org/api.html#module-selenium.webdriver.common.alert">documentação</a></p>
+                </section>
+
+                                <section>
+                    <h2>Drag and Drop</h2>
+                    <p>Problema:</p>
+                    <ul>
+                        <li>'Drag and Drop' é uma interacção complexa com vários passos: clicar e manter pressionado, arrastar, largar.</li>
+                        <li>Para funcionar correctamente, não podemos correr os comandos de forma isolada.</li>
+                        <li>Existe uma funcionalidade de webdriver chamada "ActionChain" que nos dá o que precisamos</li>
+                    </ul>
+                </section>
+
+                 <section>
+                    <h2>Drag and Drop</h2>
+                    <pre><code class="python" data-trim data-noescape>
+from selenium.webdriver.common.action_chains import ActionChains
+
+draggable = driver.find_element_by_css_selector('.container .document')
+dropable = driver.find_element_by_css_selector('.trash')
+
+actions = ActionChains(driver)
+actions.drag_and_drop(draggable, dropable)
+actions.perform()
+                    </code></pre>
+                    <p>saber mais: <a href="http://selenium-python.readthedocs.org/api.html#module-selenium.webdriver.common.action_chains">documentação</a></p>
+                </section>
+
+                <section>
+                    <h2>Hover</h2>
+                    <p>ActionChains também podem ser usados para os casos em que precisamos de revelar elementos 'on hover' com movimentos do rato.</p>
+                    <pre><code class="python" data-trim data-noescape>
+from selenium.webdriver.common.action_chains import ActionChains
+
+menu = driver.find_element_by_css_selector(".nav")
+hidden_submenu = driver.find_element_by_css_selector(".nav #submenu1")
+
+actions = ActionChains(driver)
+actions.move_to_element(menu)
+actions.click(hidden_submenu)
+actions.perform()
+                    </code></pre>
+                    <p>saber mais: <a href="http://selenium-python.readthedocs.org/api.html#module-selenium.webdriver.common.action_chains">documentação</a></p>
+                </section>
+
+                <section>
+                    <h2>Executar Javascript</h2>
+                    <p>É possível correr código javascript dentro da "sandbox" do browser controlado pelo webdriver.</p>
+                    <p>Desta forma, é possível fazer scroll a páginas com "scroll infinito".</p>
+                    <pre><code class="python" data-trim data-noescape>
+count = 0
+while count < 30:
+    # Fazer scroll à página de 200px a cada segundo
+    driver.execute_script(‘window.scrollBy(0,200)')
+    count = count + 1
+    time.sleep(1)
+                    </code></pre>
+                    <p>saber mais: <a href="http://selenium-python.readthedocs.org/api.html#module-selenium.webdriver.common.action_chains">documentação</a></p>
+                </section>
+
+            </div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>

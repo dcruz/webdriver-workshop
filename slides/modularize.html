@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Selenium/Webdriver — modularização</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/custom-solarized.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>Selenium/WebDriver</h1>
+					<h3>Modularização</h3>
+					<p>
+						<small>Criado por <a href="mailto:david@vcruz.net">David Cruz</a> / <a href="http://twitter.com/hakimel">@davidjvcruz</a></small>
+					</p>
+				</section>
+
+				<section>
+                    <h2>Problema até agora</h2>
+                        <ul>
+                            <li>O código dos testes está extensão e difícil de acompanhar</li>
+                            <li>À medida que o projecto fôr aumentando, mais difícil será gerir os testes</li>
+                            <li>Muito código redundante, nos testes e para suportá-los</li>
+                            <li>Um erro básico pode interromper todos os testes seguintes</li>
+                        </ul>
+				</section>
+                
+                <section>
+                    <h2>Usar uma framework de testes</h2>
+                    <ul>
+                        <li>Uma framework de testes auxilia-nos no processo de automatização dos testes</li>
+                        <li>Permite a separação dos testes numa colecção de blocos mais pequenos</li>
+                        <li>Permite partilhar o código de arranque e fim dos testes</li>
+                        <li>Separa o execução dos testes dos relatórios de resultado</li>
+                    </ul>
+				</section>
+
+                <section>
+                    <h2>Unittest</h2>
+                    <ul>
+                        <li>Vamos usar a framework <a href="https://docs.python.org/2/library/unittest.html">unittest</a></li>
+                        <li>É nativa ao Python(não é necessário intalação adicional)</li>
+                        <li>Só vamos abordar o essencial para modularização mas tem capacidades mais avançadas (e.g., <i>Test suites</i>)</li>
+                    </ul>
+                    <pre><code class="python" data-trim data-noescape>
+# Para poder começar a usar
+import unittest
+                    </code></pre>
+                </section>
+
+                <section>
+                <h2>Primeiro teste com <i>unittest</i></h2>
+                <pre><code class="python" data-trim data-noescape>
+import unittest
+from selenium import webdriver
+
+class TestExample(unittest.TestCase):
+
+    # Um teste a ser corrido
+    def test_something(self):
+        # Código de teste aqui!
+        pass
+
+    # Outro teste a ser corrido
+    def test_something_else(self):
+        pass
+
+if __name__ == '__main__':
+    unittest.main()
+                    </code></pre>
+                </section>
+
+                <section>
+                <h2><i>TestCase</i></h2>
+                <ul>
+                    <li><i>TestCase</i> representa um conjunto de testes relacionados</li>
+                    <li>Todas as funções começadas por "test" são interpretadas como testes e serão corridas</li>
+                </ul>
+                </section>
+
+                <section>
+                    <h2>Fases de um teste</h2>
+                    <ul>
+                        <li>Existe um conjunto de funções que correm antes e depois dos testes</li>
+                        <li>Permite evitar redundância de código, inicializar estar estados, carregar bases de dados, fazer logout, etc.</li>
+                        <li>São uma mecanismo essencial para garantirmos que um teste não interfere outro.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Fases de um teste</h2>
+                    <ol>
+                        <li><kbd>setUpClass</kbd>: Corre uma vez para cada <i>TestCase</i></li>
+                        <li>
+                            <ul>
+                                <li><kbd>setUp</kbd>: Corre antes de cada teste.</li>
+                                <li><b>teste a correr</b></li\>
+                                <li><kbd>tearDown</kbd>: Corre após cada teste</li>
+                            </ul>
+                        </li>
+                        <li><kbd>tearDownClass</kbd>: Corre, uma vez, para cada <i>TestCase</i></li>
+                    </ol>
+                </section>
+
+                <section>
+                <h2><kbd>setUpClass</kbd></h2>
+                <ul>
+                    <li>Usado para operações pesadas que queremos fazer antes dos testes de um <i>TestCase</i></li>
+                    <li>Obter dados, abrir uma aplicação, ler um ficheiro são bons candidatos.</li>
+                    <pre><code class="python" data-trim data-noescape>
+@classmethod
+def setUpClass(cls):
+    cls.driver = webdriver.Firefox()
+                    </code></pre>
+                </section>
+
+                <section>
+                <h2><kbd>setUp</kbd></h2>
+                <ul>
+                    <li>Pode ser usado para inicializar ou limpar estado necessário para a realização dos testes.</p></li>
+                    <li>Fazer login; fazer logout; carregar um cookie; navegar para uma página; ...</li>
+                    <pre><code class="python" data-trim data-noescape>
+def setUp(self):
+    self.driver.get('http://sapo.pt/')
+                    </code></pre>
+                </section>
+
+                <section>
+                <h2><kbd>tearDownClass</kbd></h2>
+                <ul>
+                    <li>Usado para operações pesadas ou lentas que queremos correr no fim de todos os testes de um <i>TestCase</i></li>
+                    <li>Gravar dados; gerar documentos; Fazer commit à base de dados; fechar aplicações; ... </li>
+                </ul>
+                    <pre><code class="python" data-trim data-noescape>
+@classmethod
+def tearDownClass(cls):
+    cls.driver.quit()
+                    </code></pre>
+                </section>
+
+                <section>
+                <h2><kbd>tearDown</kbd></h2>
+                <ul>
+                    <li>Pode ser usado limpar estado resultante de se correr um teste(e.g., logout)</li>
+                    <li>É corrido após cada teste.</li>
+                </ul>
+                    <pre><code class="python" data-trim data-noescape>
+def setUp(self):
+    self.driver.get('http://sapo.pt/')
+                    </code></pre>
+                </section>
+
+
+                <section>
+                    <h2>Um TesteCase completo</h2>
+                    <pre><code class="python" data-lang="python">
+import unittest
+from selenium import webdriver
+
+class TestStringMethods(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.driver = webdriver.Firefox()
+
+    def setUp(self):
+        self.driver.get('http://www.sapo.pt/')
+
+    def test_search(self):
+        input = self.driver.find_element_by_name('q')
+        assert input.text == ''
+
+    def test_another(self):
+        assert self.driver.title == 'SAPO'
+
+    def tearDown(self):
+        print 'tearDown'
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.driver.quit()
+
+if __name__ == "__main__":
+    unittest.main()
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Repetição de URLs e selectores</h2>
+                    <ul>
+                        <li>À medida que o número de testes aumenta, também aumentam o número de URLs e selectores repetidos em todo o código
+                        <li>Se um selector mudar, posso ter que mudar em mais do que um sitio
+                        <li>A repetição provoca erros nos testes a longo prazo. Erros nos testes implica tempo gasto a corrigí-los invés de dar valor acrescentado.
+                        <li>Temos que poder alterar só num sítios.
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Repetição de URLs e selectores</h2>
+                    <p>URL e selector repetidos</p>
+                    <pre><code class="python" data-lang="python">
+...
+class TestStringMethods(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.driver = webdriver.Firefox()
+
+    def teste_something(self):
+        self.driver.get('http://www.sapo.pt/')
+        menu = self.driver.find_element_by_css_selector('.main-menu > nav')
+        ...
+
+    def teste_something(self):
+        menu = self.driver.find_element_by_css_selector('.main-menu > nav')
+        ...
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Gestão global de URLs e selectores</h2>
+                    <p>Variáveis globais de URLs e selectores</p>
+                    <pre><code class="python" data-lang="python">
+...
+URLS = {'sapo': 'http://www.sapo.pt/'}
+SELECTORS = {'menu': '.main-menu > nav'}
+
+class TestStringMethods(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.driver = webdriver.Firefox()
+
+    def teste_something(self):
+        self.driver.get(URLS['sapo'])
+        menu = self.driver.find_element_by_css_selector(SELECTORS['menu'])
+        ...
+
+    def teste_something(self):
+        menu = self.driver.find_element_by_css_selector(SELECTORS['menu'])
+        ...
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Exercícios</h2>
+                    <ul>
+                        <li>Converter o 5º exercício(<kbd>5-radios-and-selects.py</kbd>) para <i>unittest</i> com o cuidado de o fragmentar em vários testes mais granulares
+                        <li>Extrair os selectores e URLs para variáveis globais
+                        <li>Experimentar inicializar/fechar o Webdriver no setUpClass/tearDownClass e setUp/tearDown. Qual a diferença?
+                    </ul>
+                </section>
+
+                <section data-background="#073642">
+                    <h2>Funções genéricas</h2>
+                </section>
+
+                <section>
+                    <h2>Problemas até agora</h2>
+                    <ul>
+                        <li>Conseguimos reduzir redundância na inicialização e conclusão dos testes
+                        <li>Evitamos a redundância de URLs e selectores
+                        <li>Mas continuamos a ter código repetido para procedimentos semelhantes
+                    </ul>
+                    <pre><code class="python" data-lang="python">
+    def teste_something(self):
+        search_field = self.driver.find_element_by_name(SELECTORS['search']))
+        search_field.send_keys('lisboa')
+        search_field.submit()
+
+    def teste_something(self):
+        search_field = self.driver.find_element_by_name(SELECTORS['search']))
+        search_field.send_keys('porto')
+        search_field.submit()
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Funções genéricas</h2>
+                    <ul>
+                        <li>Funções que recebem como parâmetros localização e o input necessário
+                        <li>Permitem reduzir muita da redundância no código do teste
+                    </ul>
+                    <pre><code class="python" data-lang="python">
+    def fill_text_input(self, selector, text):
+        elem = self.driver.find_element(selector)
+        elem.clear()
+        elem.send_keys(text)
+        return elem
+
+    ...
+
+    def teste_something(self):
+        newsletter_field = fill_text_input((By.NAME, 'email'))
+        newsletter_field.submit()
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Problemas</h2>
+                    <ul>
+                        <li>Para um site grande ou complexo, existe um número crescente de interacções excepcionais
+                        <li>Torna-se necessário criar várias funções similares mas com pequenos ajustes
+                        <li>Eventualmente a lista de funções genéricas cresce e torna-se difícil de manter
+                    </ul>
+                </section>
+
+                <section data-background="#073642">
+                    <h2>Page Object Pattern</h2>
+                </section>
+
+                <section>
+                    <h2>O que é?</h2>
+                    <ul>
+                        <li>É um padrão de código na qual se representam páginas ou parte da aplicação que estamos a testar
+                        <li>Permite que a alteração numa página implique corrigir o código de teste somente num sítio
+                        <li>A parte mais importante: separamos a lógica da página da lógica de testes
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Página + elementos + selectores</h2>
+                    <ul>
+                        <li>Separamos a lógica da página numa trilogia de objectos
+                        <li><b>Page</b>: A página ou estado para a qual navegamos
+                        <li><b>Element</b>: Componentes da página com o qual interagimos
+                        <li><b>Selector/Locator</b>: Selector que usamos para localizar elementos da página
+                    </ul>
+                    <p><b>Importante:</b> Não temos que representar todos os elementos das páginas. Somente os que necessitamos para testar
+                </section>
+
+ 
+                <section>
+                    <h2>Referências úteis</h2>
+                    <ul>
+                        <li><a href="https://code.google.com/p/selenium/wiki/PageObjects">Documentação oficial acerca de <i>Page Objects</i></a>
+                        <li>Documentação do módulo <a href="http://selenium-python.readthedocs.org/page-objects.html">selenium python sobre Page Objects</a>
+                        <li><a href="https://pragprog.com/magazines/2010-08/page-objects-in-python">Outra abordagem</a> para a criação de <i>Page Objects</i>
+                        <li>módulo python <a href="https://page-objects.readthedocs.org/en/latest/introduction.html">page-object</a>. Um módulo conveniente para a criação de <i>Page Objects</i>
+                    </ul>
+                </section>
+
+            </div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
