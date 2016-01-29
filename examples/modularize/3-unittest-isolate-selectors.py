@@ -23,7 +23,6 @@ locators = {
 }
 
 class TestRegistration(unittest.TestCase):
-    HOMEPAGE_URL = 'http://www.sapo.pt/'
 
     @classmethod
     def setUpClass(cls):

@@ -276,6 +276,32 @@ class TestStringMethods(unittest.TestCase):
                 </section>
 
                 <section>
+                    <h2>Abstrair estratégia de selector</h2>
+                    <p>É igualmente possível isolar a estratégia dos selectores recorrendo às chamadas <code>find_element()</code> e <code>find_elements()</code>. Passamos estratégia e selector às funções de localização.</p>
+                    <pre><code class="python" data-lang="python">
+from selenium.webdriver.common.by import By
+...
+URLS = { 'sapo': 'http://www.sapo.pt/' }
+SELECTORS = { 'menu': (By.CSS_SELECTOR, '.main-menu > nav') }
+
+class TestStringMethods(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.driver = webdriver.Firefox()
+
+    def teste_something(self):
+        self.driver.get(URLS['sapo'])
+        menu = self.driver.find_element_by(SELECTORS['menu'])
+        ...
+
+    def teste_something(self):
+        menu = self.driver.find_element_by_(SELECTORS['menu'])
+        ...
+                    </code></pre>
+                </section>
+
+                <section>
                     <h2>Exercícios</h2>
                     <ul>
                         <li>Converter o 5º exercício(<kbd>5-radios-and-selects.py</kbd>) para <i>unittest</i> com o cuidado de o fragmentar em vários testes mais granulares
