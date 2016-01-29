@@ -87,7 +87,6 @@ driver.get('http://lifestyle.sapo.pt/')
                     <p>Problema:</p>
                     <ul>
                         <li>Janelas de alerta não fazem parte do documento HTML da página</li>
-                        <li><i>Cookies</i> podem ser essenciais ou acelerarem um teste</li>
                     </ul>
 				</section>
 
@@ -160,11 +159,45 @@ actions.perform()
 count = 0
 while count < 30:
     # Fazer scroll à página de 200px a cada segundo
-    driver.execute_script(‘window.scrollBy(0,200)')
+    driver.execute_script('window.scrollBy(0,200)')
     count = count + 1
     time.sleep(1)
                     </code></pre>
                     <p>saber mais: <a href="http://selenium-python.readthedocs.org/api.html#module-selenium.webdriver.common.action_chains">documentação</a></p>
+                </section>
+
+                <section>
+                    <h2>Gravar um screenshot</h2>
+                    <p>É possível tirar um screenshot da área vísível da página com Webdriver</p>
+                    <p>Conjugando com as opções de redimensionamento da janela, dá-nos muita flexibilidade.</p>
+                    <pre><code class="python" data-trim data-noescape>
+from selenium import webdriver
+
+driver = webdriver.Firefox()
+driver.get('http://www.python.org/')
+driver.set_window_size(1024,768)
+driver.save_screenshot('screenshot.png')
+driver.quit()
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Upload de ficheiro</h2>
+                    <ul>
+                        <li>Localizar o campo de <code>&lt;input type="file"&gt;</code> e passar a localização do ficheiro com <code>.send_keys()</code>
+                        <li>Pode-se passar que uma localização relativa(referente à directoria de testes) ou absoluta
+                        <li>Atenção: o endereço em UNIX e Windows é diferente
+                    </ul>
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Referências úteis</h2>
+                    <ul>
+                        <li><a href="https://github.com/seleniumhq/selenium">Projecto Selenium Webdriver</a>
+                        <li><a href="https://code.google.com/p/selenium/wiki/FrequentlyAskedQuestions">Webdriver FAQ</a>
+                        <li><a href="http://docs.seleniumhq.org/docs/">Documentação SeleniumIDE, Selenium/Webdriver, Selenium Grid</a>
+                    </ul>
                 </section>
 
             </div>
