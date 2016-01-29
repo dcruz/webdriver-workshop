@@ -25,7 +25,6 @@ driver.get('http://mag.sapo.pt/')
 #
 # TODO: abrir a página de nomeados aos Óscares
 # interagindo com o menu
-driver.get('http://mag.sapo.pt/oscares/nomeados')
 
 #
 # 2

@@ -26,9 +26,9 @@ class TestRegistration(unittest.TestCase):
     HOMEPAGE_URL = 'http://www.sapo.pt/'
 
     @classmethod
-    def setUpClass(self):
-        self.driver = webdriver.Firefox()
-        #self.driver = webdriver.Chrome('./lib/chromedriver')
+    def setUpClass(cls):
+        cls.driver = webdriver.Firefox()
+        #cls.driver = webdriver.Chrome('./lib/chromedriver')
         #wait = WebDriverWait(driver, 10)
 
     def setUp(self):
@@ -83,9 +83,9 @@ class TestRegistration(unittest.TestCase):
         pass
 
     @classmethod
-    def tearDownClass(self):
+    def tearDownClass(cls):
         # Fecha a conexão com o browser
-        self.driver.quit()
+        cls.driver.quit()
 
 if __name__ == '__main__':
     unittest.main()

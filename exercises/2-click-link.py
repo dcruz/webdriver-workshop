@@ -5,12 +5,13 @@
 =====================
 2. Click link
 =====================
-Submissão de uma pesquisa
-Validação de que a pesquisa retorna resultados
+Clique no separador de Tecnologia
+Certificar-se que se está na página de Tecnologia
 """
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys # Import para inserção de teclas especiais
+import time
 
 # Escolha do conector de Webdriver
 driver = webdriver.Firefox()
@@ -21,6 +22,7 @@ driver.get('http://www.sapo.pt/');
 
 # Localizar o campo de pesquisa
 elem = driver.find_element_by_css_selector("#categoria-tecnologia")
+# -> o que falta?
 
 # Confirmar que se navegou para a página de notícias de tecnologia
 active_tab = driver.find_element_by_css_selector('.active')

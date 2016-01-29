@@ -1,5 +1,6 @@
 Feature: Testing SAPO search consistency
 
+    @wip @slow
     Scenario Outline: Search query is the same on result page
         Given I open SAPO homepage
         When I search for "<query>"

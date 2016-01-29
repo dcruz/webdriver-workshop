@@ -62,9 +62,21 @@
                 <section>
                     <h2>Behavior-driven development</h2>
                         <ul>
+                            <li>É uma técnica de desenvolvimento <em>agile</em> que pretende
+                            <li>Podem ser facilmente mapeados a partir de <em>Epics</em> e <em>User stories</em>(em "user story format"/"connextra format") para testes.
+                        </ul>
+                        <blockquote>
+                            As a manager<br/>
+                            I want to see my team schedule<br/>
+                            So I can balance work load among them.
+                        </blockquote>
+                </section>
+
+                <section>
+                    <h2>Behavior-driven development</h2>
+                        <ul>
                             <li>Termos como '<em>should</em>', quando se descreve o comportamento do software, ajuda a clarifica a responsabilidade e fomenta a discussão da funcionalidade
                             <li>Termos como '<em>ensure'</em> descreve a responsabilidade do sistema em validar o desfecho da situação efectuada
-                            <li>Podem ser facilmente mapeados <em>Epics</em> e <em>User stories</em> nos testes
                             <li>mais acerca de <a href="https://en.wikipedia.org/wiki/Behavior-driven_development">Behavior-driven development</a>(BDD)
                         </ul>
                 </section>
@@ -109,11 +121,89 @@ Scenario: Refunded items should be returned to stock
                         <p>Não usar nos passos "Given"</p>
                         <ul>
                             <li>Given I click the login button</li>
+                            <li>Given The element '//form#newsletter' is present</li>
                         </ul>
                 </section>
 
                 <section>
-                    <h2>Testes <abbr title="Behavior-driven development">BDD</abbr> com BDD</h2>
+                    <h2>When: Do & don't</h2>
+                        <p> Válidos como "When"</p>
+                        <ul>
+                            <li>Interacções que o utilizadores faça.
+                        </ul>
+                        <p>Não usar nos passos "When"</p>
+                        <ul>
+                            <li>O estado é estático. Visto que não houve evento de mudança, pode ser omitido.
+                        </ul>
+                </section>
+
+                <section>
+                    <h2>Then: Do & don't</h2>
+                        <p> Válidos como "Then"</p>
+                        <ul>
+                            <li>Mudanças de estado relevantes ou visíveis ao utilizador
+                        </ul>
+                        <p>Não usar nos passos "Then"</p>
+                        <ul>
+                            <li>Duas validações na mesma cláusula de "Then"
+                            <li>Estados complexos/internos de sistema
+                        </ul>
+                </section>
+
+                <section>
+                    <h2>And: Do & don't</h2>
+                        <p> Válidos como "And"</p>
+                        <ul>
+                            <li>As cláusulas "And" são uma extensão da cláusula Given/When/Then que aparece anteriormente
+                        </ul>
+                        <p>Não usar nos passos "And"</p>
+                        <ul>
+                            <li>Não usar "and" para conjugar duas frase: "<em>Given I am on the homepage and scrolled page down</em>"
+                        </ul>
+                </section>
+
+                <section>
+                    <h2>Scenarios: Do & don't</h2>
+                        <ul>
+                            <li>Devem ser independentes uns dos outros.
+                            <li>Preferível várias simples do que uma complexa.
+                            <li>Não devem ter várias condições alternativas de sucesso.<br/>Se existirem, são cenários independentes.
+                            <li>Não deve ter repetição de passos idênticos.
+                        </ul>
+                </section>
+
+                <section>
+                    <h2>Escrita declarativa invés de imperativa</h2>
+                        <p>Passos descritos imperativamente tendem a revelar mais detalhes internos</p>
+                         <pre><code class="gherkin" data-trim data-lang="example.feature" data-noescape>
+Scenario: Login
+
+Given I am on the login page
+
+When I fill "username" with "ABC"
+And I fill password with "XYZ"
+And I checked the "Remember Me" checkbox
+And I click on the "Submit" button
+
+Then I should log into the system
+And I should see then 'Welcome' message
+
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Escrita declarativa invés de imperativa</h2>
+                        <p>Passos declarativos são mais curtos e legíveis</p>
+                         <pre><code class="gherkin" data-trim data-lang="example.feature" data-noescape>
+Scenario: Login
+
+Given I have logged into the system
+Then I should see the 'Welcome' message
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Testes <abbr title="Behavior-driven development">BDD</abbr> com Behave</h2>
                         <ul>
                             <li>Vamos criar testes BDD recorrendo à ferramenta <em><a href="http://pythonhosted.org/behave/">Behave</a></em>
                             <li><em>Behave</em> trabalha com dois tipos de ficheiros: "features" e "steps"
@@ -356,6 +446,7 @@ def step_impl(context, query):
                     <ul>
                         <li>Selecção de steps com expressões regulares
                         <li>Interligação com 'mocks'
+                        <li>Marcar cenários com tags "<kbd>@wip @slow</kbd>" para permitir a filtragem dos cenários a correr
                         <li>Formatos de output alternativos
                         <li>Suporte para outros idiomas do termos de teste (e.g, 'Given' -> 'Dado', 'Then' -> 'Então', ...)
                         <li>ver mais na <a href="http://pythonhosted.org/behave/index.html">documentação de Behave</a>

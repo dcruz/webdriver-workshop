@@ -29,7 +29,9 @@ driver.add_cookie(new_cookie)
 for cookie in driver.get_cookies():
     print "%s -> %s" % (cookie['name'], cookie['value'])
 
-driver.get('http://lifestyle.sapo.pt/')
+# URL com carácter especial no fim para garantir que a publiciadade
+# não impede a modal de subscrição de aparecer.
+driver.get('http://lifestyle.sapo.pt/sabores!')
 
 """
 <end>

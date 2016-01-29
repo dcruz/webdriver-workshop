@@ -38,7 +38,7 @@ register_link = mail_widget.find_element_by_css_selector('.section-footer a')
 register_link.click()
 
 # Certificar-se que se está na página de registo
-assert "Criação" in driver.title
+assert u"Criação" in driver.title
 
 # Fecha a conexão com o browser
 driver.close()

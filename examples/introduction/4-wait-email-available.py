@@ -65,6 +65,7 @@ assert email_error.is_displayed()
 time.sleep(5)
 
 # Preenche um email válido
+email_field.clear()
 email_field.send_keys('chefe-joao-silva')
 assert not email_error.is_displayed()
 

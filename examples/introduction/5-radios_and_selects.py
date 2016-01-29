@@ -63,10 +63,14 @@ email_error = wait.until(
         ))
 assert email_error.is_displayed()
 
+time.sleep(5)
+
 # Preenche um email válido
 email_field.clear()
 email_field.send_keys('chefe-joao-silva')
 assert not email_error.is_displayed()
+
+time.sleep(5)
 
 # Preencher a data de aniversário
 birthdate_day = driver.find_element_by_name('day')
@@ -84,7 +88,7 @@ birthdate_day.select_by_index(7)
 birthdate_month.select_by_visible_text('Jun')
 birthdate_year.select_by_value('1984')
 
-time.sleep(5)
+time.sleep(2)
 
 # Fecha a conexão com o browser
-driver.close()
+driver.quit()

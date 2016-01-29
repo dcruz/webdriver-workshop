@@ -423,7 +423,7 @@ driver.find_element_by_xpath_selector('//nav')
                     </code></pre>
                     <p>Obter primeiro formulário de pesquisa</em>:</p>
                     <pre><code data-lang="python">
-driver.find_elements_by_css_selector('[role="search"]')
+driver.find_element_by_xpath('//[@role="search"]')
                     </code></pre>
                 </section>
 
@@ -431,7 +431,7 @@ driver.find_elements_by_css_selector('[role="search"]')
                     <h2>Selector <em>XPath</em></h2>
                     <p>Localizar pelo ID:</p>
                     <pre><code data-lang="python">
-driver.find_element_by_xpath_selector('//[@id="main-menu]')
+driver.find_element_by_xpath_selector('//[@id="main-menu"]')
                     </code></pre>
                     <p>Seleccionar o link com o texto "About"</em>:</p>
                     <pre><code data-lang="python">
@@ -510,6 +510,7 @@ driver.find_elements_by_css('a[href^="mailto:"]')
 driver.find_elements_by_css('a[href$=".pt"]')
                     </code></pre>
                 </section>
+
                 <section>
                     <h2>Selector <em>CSS</em></h2>
                     <p>Seleccionar o último link do menu</p>
@@ -522,12 +523,45 @@ driver.find_element_by_css('#main-menu li:nth-of-type(2) a')
                     </code></pre>
                 </section>
 
+                <section data-background="#073642">
+                    <h2>A arte/ciência dos selectores</h2>
+                </section>
+
+                <section>
+                <h2>Evitar selectores demasiado específicos</kbd></h2>
+                <ul>
+                    <li>Quanto mais específico, mais provável que uma alteração quebre o teste</li>
+                    <li>Adição ou remoção de elementos, mudança de nomes, podem provocar problemas</li>
+                    <li>Específico: <br/><code>header#main-header nav > ul a.active</code>
+                    <li>Mais robusto: <br/><code>#main-header .active</code>
+                </ul>
+                </section>
+
+                <section>
+                <h2>Evitar selectores excessivamente genéricos</kbd></h2>
+                <ul>
+                    <li>Por vezes somos excessivamente genéricos e o selector funciona porque estamos implicitamente a depender da ordem actual.</li>
+                    <li>Por exemplo, é testado o formulário de newsletter. Após uns <i>sprints</i>, é adicionado por cima outro formulário.<br/>O teste quebra.</li>
+                    <li>Não depender da ordem implícita</li>
+                </ul>
+                </section>
+
+                <section>
+                <h2>A armadilha do (falso) responsive</kbd></h2>
+                <ul>
+                    <li>Há muito mau código produzido, actualmente, na qual se repete código, em particular os menus de navegação.
+                    <li>Não é raro acontecer que um identificador tipo "#main-menu", afinal não ser único
+                </ul>
+                </section>
+
+                <!-- TODO
                 <section>
                     <h2>Enganos comuns e principais erros</h2>
                     <p>detalhar os principais problemas com selectores</p>
                     <ul>
                         <li>TODO: elemento não está visível ao utilizador (display: hidden?; display: none?)</li>
                 </section>
+                -->
 
                 <section>
                     <h2>Comandos essenciais</h2>
@@ -565,8 +599,31 @@ driver.find_element_by_css('#main-menu li:nth-of-type(2) a')
                     <ul>
                         <li><code>elem.send_keys('João Silva')</code><br/>Preenche o campo de texto
                         <li><code>elem.clear()</code><br/>Limpa o campo de texto
+                        <li>Objecto <code>Keys</code> facilita acesso a caracteres especiais como "ENTER", "CTRL", ...
                     </ul>
                     <p><b>Atenção:</b> Seleccionar ou escrever num campo de texto não limpa o que lá está.</p>
+                </section>
+
+                <section>
+                <h2>Interagir com <kbd>&lt;select&gt;</kbd></h2>
+                <p>Com os comandos que já conhecemos podemos interagir, mas há uma opção mais conveniente</p>
+                <pre><code class="python" data-lang="python">
+...
+# 'import' para caracteres especiais
+from selenium.webdriver.common.keys import Keys
+
+...
+
+newsletter_input = driver.find_element_by_name('newsletter')
+
+# limpar o input
+newsletter_input.clear()
+# preencher email
+newsletter_input.send_keys('calvin@gmail.cop')
+# corrigir último carácter
+newsletter_input.send_keys(Keys.BACKSPACE)
+newsletter_input.send_keys('m')
+                </code></pre>
                 </section>
 
                 <section>

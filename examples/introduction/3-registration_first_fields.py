@@ -46,9 +46,13 @@ assert "email SAPO" in driver.title
 name_field = driver.find_element_by_name('name')
 name_field.send_keys(u'João Silva')
 
+time.sleep(2)
+
 # Preenche email
 email_field = driver.find_element_by_name('email')
 email_field.send_keys('joaosilva')
+
+time.sleep(2)
 
 # Verifica que o email não está disponível
 email_error = driver.find_element_by_css_selector('#registo .control-group:nth-of-type(2) .setMsg.error')
@@ -56,13 +60,14 @@ email_error = driver.find_element_by_css_selector('#registo .control-group:nth-o
 # ERRO: é provável que a validação do email não tenha concluído
 assert email_error.is_displayed()
 
-time.sleep(5)
+time.sleep(2)
 
 # Preenche um email válido
+email_field.clear()
 email_field.send_keys('chefe-joao-silva')
 assert not email_error.is_displayed()
 
-time.sleep(5)
+time.sleep(2)
 
 # Fecha a conexão com o browser
-driver.close()
+driver.quit()
